@@ -4,9 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 public class CalculatorTest {
 
     Calculator cal;
@@ -17,13 +14,31 @@ public class CalculatorTest {
     }
 
     @Test
-    public void 쉼표파싱() {
-        assertThat(cal.split("1,2,3"), is(new String[]{"1", "2", "3"}));
+    public void DelimiterStringSplitter_Test() {
+        DelimiterStringSplitter splitter = new DelimiterStringSplitter();
+
+        splitter.setValue(",");
+        Assert.assertEquals(splitter.split("1,2,3").size(), 3);
+
+        splitter.setValue("^");
+        Assert.assertEquals(splitter.split("1^2^3").size(), 3);
     }
 
     @Test
-    public void 콜론파싱() {
-        assertThat(cal.split("1:2:3"), is(new String[]{"1", "2", "3"}));
+    public void ComplexStringSplitter() {
+        DelimiterStringSplitter splitter = new DelimiterStringSplitter();
+
+        splitter.setValue(",|:");
+        Assert.assertEquals(splitter.split("1,2:3").size(), 3);
+
+        splitter.setValue("^|,");
+        Assert.assertEquals(splitter.split("1^2,3").size(), 3);
+    }
+
+    @Test
+    public void CustomStringSplitter() {
+        CustomStringSplitter splitter = new CustomStringSplitter();
+        Assert.assertEquals(splitter.split("//;\n1;2;3").size(), 3);
     }
 
     @Test
@@ -52,7 +67,7 @@ public class CalculatorTest {
     @Test
     public void caret_더하기() {
         DelimiterStringSplitter splitter = new DelimiterStringSplitter();
-        splitter.setValue("\\^");
+        splitter.setValue("^");
         cal.setStringSplitter(splitter);
         Assert.assertEquals(cal.add("1^2^3"), 6);
     }

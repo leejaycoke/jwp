@@ -12,7 +12,7 @@ public class DelimiterStringSplitter implements StringSplitter {
 
     @Override
     public void setValue(String value) {
-        this.value = value;
+        this.value = "\\" + value;
     }
 
     @Override
