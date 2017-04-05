@@ -9,17 +9,22 @@ public class Calculator {
 
     private Pattern p = Pattern.compile("//(.)\n(.*)");
 
-    int add(String strings) {
-        if (strings == null || strings.trim().equals("")) {
+    private StringSplitter stringSplitter;
+
+    void setStringSplitter(StringSplitter stringSplitter) {
+        this.stringSplitter = stringSplitter;
+    }
+
+    int add(String string) {
+        if (string == null || string.trim().equals("")) {
             return 0;
         }
 
-        String[] numbers = split(strings);
-        if (!validate(numbers, 0)) {
-            throw new RuntimeException("음수가 포함되어 있습니다.");
+        if (stringSplitter == null) {
+            return 0;
         }
 
-        List<Positive> positives = convertToPositive(numbers);
+        List<Positive> positives = stringSplitter.split(string);
 
         int total = 0;
         for (Positive positive : positives) {
@@ -29,26 +34,39 @@ public class Calculator {
         return total;
     }
 
-    String[] split(String strings) {
-        Matcher matcher = p.matcher(strings);
+//    StringSplitter getValidSplitter(String string, int index) {
+//        if (stringSplitters.get(index).isValid(string)) {
+//            return stringSplitters.get(index);
+//        }
+//
+//        if (index == stringSplitters.size() - 1) {
+//            return null;
+//        }
+//
+//        return getValidSplitter(string, ++index);
+//    }
+
+
+    String[] split(String string) {
+        Matcher matcher = p.matcher(string);
         if (matcher.matches()) {
             String delimiter = matcher.group(1);
             return matcher.group(2).replace(delimiter, ",").split(",");
         }
-        return strings.split(",|:");
 
+        return string.split(",|:");
     }
 
-    boolean validate(String[] strings, int index) {
-        if (strings[index].startsWith("-")) {
+    boolean validate(String[] string, int index) {
+        if (string[index].startsWith("-")) {
             return false;
         }
 
-        if (index == strings.length - 1) {
+        if (index == string.length - 1) {
             return true;
         }
 
-        return validate(strings, ++index);
+        return validate(string, ++index);
     }
 
     List<Positive> convertToPositive(String[] numbers) {

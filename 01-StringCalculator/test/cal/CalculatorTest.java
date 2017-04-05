@@ -35,21 +35,39 @@ public class CalculatorTest {
 
     @Test
     public void 쉼표구분자_더하기() {
+        DelimiterStringSplitter splitter = new DelimiterStringSplitter();
+        splitter.setValue(",");
+        cal.setStringSplitter(splitter);
         Assert.assertEquals(cal.add("1,2,3"), 6);
     }
 
     @Test
     public void 콜론구분자_더하기() {
+        DelimiterStringSplitter splitter = new DelimiterStringSplitter();
+        splitter.setValue(":");
+        cal.setStringSplitter(splitter);
         Assert.assertEquals(cal.add("1:2:3"), 6);
     }
 
     @Test
+    public void caret_더하기() {
+        DelimiterStringSplitter splitter = new DelimiterStringSplitter();
+        splitter.setValue("\\^");
+        cal.setStringSplitter(splitter);
+        Assert.assertEquals(cal.add("1^2^3"), 6);
+    }
+
+    @Test
     public void 쉼표와콜론섞어서_더하기() {
+        ComplexStringSplitter splitter = new ComplexStringSplitter();
+        cal.setStringSplitter(splitter);
         Assert.assertEquals(cal.add("1,2:3"), 6);
     }
 
     @Test
     public void 커스텀_더하기() {
+        CustomStringSplitter splitter = new CustomStringSplitter();
+        cal.setStringSplitter(splitter);
         Assert.assertEquals(cal.add("//;\n1;2;3"), 6);
         Assert.assertEquals(cal.add("//*\n1*2*3"), 6);
         Assert.assertEquals(cal.add("//^\n1^2^3"), 6);
@@ -57,10 +75,9 @@ public class CalculatorTest {
 
     @Test(expected = RuntimeException.class)
     public void 음수_Exception() {
+        DelimiterStringSplitter splitter = new DelimiterStringSplitter();
+        cal.setStringSplitter(splitter);
         Assert.assertEquals(cal.add("-1,2,3"), 6);
-        Assert.assertEquals(cal.add("-1,2,-3"), 6);
-        Assert.assertEquals(cal.add("//*\n1*-2*3"), 6);
-        Assert.assertEquals(cal.add("1:-2:3"), 6);
     }
 
 }

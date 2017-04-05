@@ -7,9 +7,8 @@ import java.util.List;
  */
 public interface StringSplitter {
 
-    void setRegex(String pattern);
+    void setValue(String value);
 
-    boolean isValid();
+    List<Positive> split(String string);
 
-    List<Positive> split();
 }
